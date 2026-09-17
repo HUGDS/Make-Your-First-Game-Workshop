@@ -24,6 +24,14 @@ The below instructions will guide you through creating this platformer game, fee
 
     3.5. [Project View](#35-project-view),
 
+4. [Creating a Player](#4-creating-a-player),
+
+    4.1. [Creating the main Player object](#41-creating-the-main-player-object),
+
+    4.2. [Creating the Player's MonoBehaviour script](#42-creating-the-players-monobehaviour-script),
+
+    4.3. [A brief overview of the structure of a MonoBehaviour script](#43-a-brief-overview-of-the-structure-of-a-monobehaviour-script)
+
 ## 1. Downloading the workshop
 
 To download the project from this GitHub page, first select `Code`, and then `Download ZIP`, as shown below.
@@ -70,25 +78,129 @@ Once the project is open, Unity should look something similar to what is seen be
 
 ### 3.1. The Hierarchy
 
-The hierarchy shows a tree view of all GameObjects currently in the scene, along with the scene name, which for this is currently `Untitled`. From the hierarchy, objects can be selected, which will then show up in [the inspector](#33-the-inspector).
+The hierarchy shows a tree view of all GameObjects currently in the scene, along with the scene name, which for this is currently `Untitled`. From the hierarchy, objects can be selected, which will then show up in [the Inspector](#33-the-inspector).
 
 ### 3.2. Play / Pause
 
 These two buttons allow you to test your game. Pressing the play button will switch the editor to `Play Mode` and begin running the game, and when pressed during `Play Mode`, the play button will swap the editor back out of `Play Mode`. The pause button pauses `Play Mode`, allowing for you to look at the state of objects in the scene whilst the game is running.
 
-### 3.3 The Inspector
+### 3.3. The Inspector
 
-The inspector shows a list of all components currently on the GameObject that is currently selected in [the hierarchy](#31-the-hierarchy). It also allows for you to change component values on the selected GameObject.
+The inspector shows a list of all components currently on the GameObject that is currently selected in [the Hierarchy](#31-the-hierarchy). It also allows for you to change component values on the selected GameObject.
 
-### 3.4 Scene View
+### 3.4. Scene View
 
-The scene view shows the currently active scene, and will swap to the game view when `Play Mode` is started by pressing [the play](#32-play--pause) button.
+The scene view shows the currently active scene, and will swap to the game view when `Play Mode` is started by pressing [the Play](#32-play--pause) button.
 
-### 3.5 Project View
+### 3.5. Project View
 
 The project view is a directory view of all files in the project. By default it shows the root of the `Assets` folder.
 
-## Creating a Player
+## 4. Creating a Player
+
+### 4.1. Creating the main Player object
+
+Before starting work on a Player, make sure that the currently open scene is `Main`. This scene can be found in [the Project View](#35-project-view) under the path `Assets` &rarr; `Scenes`.
+
+As with every great Unity game, it starts with a cube (in this case a 2D cube, called a square). In [the Hierarchy](#31-the-hierarchy), right click and select `2D Object` &rarr; `Sprites` &rarr; `Square`.
+
+![An image showing the UI flow for creating a square](Tutorial/Image/Player/0.webp)
+
+Once created, you will be able to type out a name for it, name it something appropriate, for this workshop this object will be named `Player`.
+
+As the Player will be our character, they will need to be able to move and collide with other things in the scene. To do this, the Player will need a `Rigidbody 2D` and a `Box Collider 2D`.
+
+To do this, click `Add Component` in [the Inspector](#33-the-inspector) with the Player object selected in [the Hierarchy](#31-the-hierarchy) and then search for `Rigidbody 2D`. Click it when it appears in the search.
+
+![An image showing adding a rigidbody component](Tutorial/Image/Player/1.webp)
+
+Once created, a new component like shown below should appear:
+
+![An image showing the rigidbody component](Tutorial/Image/Player/2.webp)
+
+To prevent the Player from spinning in circles when they start moving later on in the workshop, go to `Constraints` within the Rigidbody 2D and toggle `Freeze Rotation` `Z`.
+
+![An image showing the constraint enabled](Tutorial/Image/Player/3.webp)
+
+Next, follow the same process to add a `Box collider 2D` component to the Player object.
+
+At this point you are welcome to press [the Play button](#32-play--pause) to see what you've made. If you see the Player begin to fall towards the bottom of the screen and then off the screen, congratulations! Otherwise, feel free to ask one of the society execs if you are unsure why this is not happening, or even if you just want any piece of what you've just done explaining in more detail.
+
+### 4.2. Creating the Player's MonoBehaviour script
+
+Next, the movement for the Player will be created. To do this a MonoBehaviour script will need to be created. To do this, go to [the Project View](#35-project-view) and right click, then select `Create` &rarr; `MonoBehaviour Script`. For this workshop, the script will be placed inside a folder named `Script`, which can be created by right clicking in [the Project View](#35-project-view) and selecting `Create` &rarr; `Folder`.
+
+Name the MonoBehaviour script something appropriate, for this tutorial the name `Player_Move` will be used. Once created and named, double click on the new script to open it in Visual Studio.
+
+```csharp
+using UnityEngine;
+
+public class Player_Move : MonoBehaviour
+{
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+```
+
+The created script should be the same as shown above. All MonoBehaviour scripts follow the same structure as seen here.
+
+### 4.3. A brief overview of the structure of a MonoBehaviour script
+
+All MonoBehaviour scripts define a single MonoBehaviour class, which follows the format of:
+
+```csharp
+public class CLASSNAME : MonoBehaviour
+{
+...
+```
+
+Which means that this class ***is a*** MonoBehaviour class and as such inherits methods and attributes such as the two shown below:
+
+```csharp
+...
+// Start is called once before the first execution of Update after the MonoBehaviour is created
+void Start()
+{
+    
+}
+
+// Update is called once per frame
+void Update()
+{
+    
+}
+...
+```
+
+These two methods are provided by Unity, with the first one `Start` being called on the first frame of the scene being run, and `Update` being called on every subsequent frame.
+
+### 4.4. Creating the Player's script functionality
+
+Remember when you created the `Rigidbody 2D` and `Box Collider 2D` components on the Player object? Well now you need a way to interact with the `Rididbody 2D` from within the Player's script. To do this, create a variable of type `Rigidbody2D` as shown below and mark it with `[SerializeField]`:
+
+```csharp
+public class Player_Move : MonoBehaviour
+{
+    // Editor Variables
+    [SerializeField]
+    private Rigidbody2D _rigidBody;
+...
+```
+
+The tag `[SerializeField]` tells Unity that this variable should be modifiable via the inspector. In fact, let's do that right now. Go back to Unity and on the Player object add the created MonoBehaviour component the same way that the other two components were added (it will show up with the same name that you gave the script).
+
+![An image showing the script being added to the player](Tutorial/Image/Player/4.webp)
+
+As can be seen above, the variable that was added in the script has now appeared as a field on the `Player_Move` component, with its name being a 'pretty-printed' version of the variable name in the script. From here, either drag the `Rigidbody 2D` component onto the `Rigid Body` field or click on the `+` on the field and select `Player` from the menu that appears. The field should now be populated with the Player's rigidbody component.
 
 ## Creating something for the Player to stand on
 
