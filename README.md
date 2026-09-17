@@ -202,6 +202,17 @@ The tag `[SerializeField]` tells Unity that this variable should be modifiable v
 
 As can be seen above, the variable that was added in the script has now appeared as a field on the `Player_Move` component, with its name being a 'pretty-printed' version of the variable name in the script. From here, either drag the `Rigidbody 2D` component onto the `Rigid Body` field or click on the `+` on the field and select `Player` from the menu that appears. The field should now be populated with the Player's rigidbody component.
 
+Next, a way for the Player to detect input should be added. For this workshop, the built-in Unity Input System will be used. Create a pair of variables for holding references to the Input System's built in 'Move' and 'Jump' actions. To modify or view these actions within Unity, navigate to the title bar and select `Edit` &rarr; `Project Settings...` &rarr; `Input System Package`.
+
+```csharp
+private Rigidbody2D _rigidBody;
+
+// Private Variables
+private InputAction _move;
+private InputAction _jump;
+...
+```
+
 ## Creating something for the Player to stand on
 
 ## Creating an Enemy
