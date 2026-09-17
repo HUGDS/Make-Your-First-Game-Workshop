@@ -8,9 +8,21 @@ The below instructions will guide you through creating this platformer game, fee
 
 1. [Downloading the workshop](#downloading-the-workshop),
 
-    1.A. [If you do not know your User ID](#if-you-do-not-know-your-user-id),
+    1.1. [If you do not know your User ID](#if-you-do-not-know-your-user-id),
 
 2. [Opening the project](#opening-the-project),
+
+3. [Getting to grips with Unity](#3-getting-to-grips-with-unity),
+
+    3.1. [The Hierarchy](#31-the-hierarchy),
+
+    3.2. [Play / Pause](#32-play--pause),
+
+    3.3. [The Inspector](#33-the-inspector),
+
+    3.4. [Scene View](#34-scene-view),
+
+    3.5. [Project View](#35-project-view),
 
 ## 1. Downloading the workshop
 
@@ -24,7 +36,7 @@ Unlike your documents, downloads, etc folders, this folder exists locally on the
 
 Once downloaded, unzip the downloaded ZIP file and move onto the next section.
 
-### 1.A. If you do not know your User ID
+### 1.1. If you do not know your User ID
 
 If you do not know your User ID, you can find it out by visiting [this](https://evision.hull.ac.uk/) website, logging in with your student email and then selecting `my Details` from the leftmost menu.
 
@@ -50,11 +62,33 @@ In the file select prompt that shows up, navigate to the folder that was extract
 
 The Unity Hub should now show the project, from which the project can be clicked on to begin opening it in Unity.
 
-##
+## 3. Getting to grips with Unity
+
+Once the project is open, Unity should look something similar to what is seen below. If you are already familiar with Unity, you are welcome to skip this section as it will simply give a brief overview of the Unity UI.
+
+![An image showing the Unity UI after opening Unity](Tutorial/Image/GripsWithUnity/0.webp)
+
+### 3.1. The Hierarchy
+
+The hierarchy shows a tree view of all GameObjects currently in the scene, along with the scene name, which for this is currently `Untitled`. From the hierarchy, objects can be selected, which will then show up in [the inspector](#33-the-inspector).
+
+### 3.2. Play / Pause
+
+These two buttons allow you to test your game. Pressing the play button will switch the editor to `Play Mode` and begin running the game, and when pressed during `Play Mode`, the play button will swap the editor back out of `Play Mode`. The pause button pauses `Play Mode`, allowing for you to look at the state of objects in the scene whilst the game is running.
+
+### 3.3 The Inspector
+
+The inspector shows a list of all components currently on the GameObject that is currently selected in [the hierarchy](#31-the-hierarchy). It also allows for you to change component values on the selected GameObject.
+
+### 3.4 Scene View
+
+The scene view shows the currently active scene, and will swap to the game view when `Play Mode` is started by pressing [the play](#32-play--pause) button.
+
+### 3.5 Project View
+
+The project view is a directory view of all files in the project. By default it shows the root of the `Assets` folder.
 
 ## Creating a Player
-
-To start, 
 
 ## Creating something for the Player to stand on
 
