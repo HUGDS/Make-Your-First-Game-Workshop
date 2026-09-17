@@ -6,11 +6,11 @@ The below instructions will guide you through creating this platformer game, fee
 
 # Index
 
-1. [Downloading the workshop](#downloading-the-workshop),
+1. [Downloading the workshop](#1-downloading-the-workshop),
 
-    1.1. [If you do not know your User ID](#if-you-do-not-know-your-user-id),
+    1.1. [If you do not know your User ID](#11-if-you-do-not-know-your-user-id),
 
-2. [Opening the project](#opening-the-project),
+2. [Opening the project](#2-opening-the-project),
 
 3. [Getting to grips with Unity](#3-getting-to-grips-with-unity),
 
