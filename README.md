@@ -4,6 +4,8 @@ By the end of this workshop, you should hopefully have created a small platforme
 
 The below instructions will guide you through creating this platformer game, feel free to follow them as strictly or loosely as you want!
 
+If at any point you wish to view a completed version of this workshop to reference whilst making your own, a finished version can be found in `Tutorial` &rarr; `Finished` &rarr; `Make-Your-First-Game-Workshop_FINISHED.zip`.
+
 # Index
 
 1. [Downloading the workshop](#1-downloading-the-workshop),
@@ -41,6 +43,32 @@ The below instructions will guide you through creating this platformer game, fee
     5.1. [Making some ground](#51-making-some-ground),
 
     5.2. [Extension: Preventing double jumping](#52-extension-preventing-double-jumping),
+
+6. [Creating a Coin](#6-creating-a-coin),
+
+7. [Replacing those boxes with sprites](#7-replacing-those-boxes-with-sprites),
+
+    7.1. [The Ground Sprites](#71-the-ground-sprites),
+
+    7.2. [The Coin Sprites](#72-the-coin-sprites),
+
+8. [Suggested tasks](#8-suggested-tasks),
+
+    8.1. [Prefabs!](#81-prefabs),
+
+    8.2. [Player Animation](#82-player-animation),
+
+    8.3. [More Sound Effects](#83-more-sound-effects),
+
+    8.4. [Score Display](#84-score-display),
+
+    8.5. [Camera Follows Player](#85-camera-follows-player),
+
+    8.6. [An Enemy!](#86-an-enemy),
+
+    8.7. [Power-ups](#87-power-ups),
+
+    8.8. [Win Condition](#88-win-condition).
 
 ## 1. Downloading the workshop
 
@@ -319,6 +347,8 @@ From this point feel free to tweak the Player's jump height and add more boxes t
 
 You may have noticed that the Player can jump whenever they want, regardless of whether they are on the ground or not. To work around this, the ever-useful Box Collider 2D can be used to add ground detection. To do this, we can add a child to the Player object by selecting the Player and then right clicking on them in [the Hierarchy](#31-the-hierarchy) and selecting `Create Empty`. Name the object something appropriate such as `FloorCheck`.
 
+When an object is a 'child' of another object in Unity, the child object inherits all movement of its parent, maintaining the same offset from its parent as from when it was first parented.
+
 ![An image showing FloorCheck being moved](Tutorial/Image/Ground/2.webp)
 
 With the new object selected, navigate to [the Scene View](#34-scene-view) and drag the green arrow such that the object appears slightly below the player. Next we'll add a `Box Collider 2D` to the object.
@@ -475,9 +505,103 @@ Now you should be able to click [the Play button](#32-play--pause) to test the C
 
 ## 7. Replacing those boxes with sprites
 
+### 7.1. The Ground Sprites
+
+Now that there is some functionality in the game, it's about time for some artwork to be added to the game.
+
+To start, take the first 'Ground' object that was made, copy the 'Scale' settings that are currently applied to it and place them in the `Size` field of the object's `Box Collider 2D`, then set the object's scale to (1,1), as seen below:
+
+![An image showing progress being undone](Tutorial/Image/MakeSprites/0.webp)
+
+Fun Fact: The green outline you can see is actually the bounds of the `Box Collider 2D`. The reason you may not have been able to see it before is because a scale of (1,1), which it defaults to, makes it perfectly match the size of the square that we have previously bee scaling.
+
+Now select the `Sprite` field of the `Sprite Renderer` and set it to any tile from the `world_tileset` spritesheet of your choosing. For this workshop `world_tileset_0` will be used.
+
+Once you've done that, select change the `Draw Mode` field of the `Sprite Renderer` from `Simple` to `Tiled` and set the `Width` and `Height` fields to the same values as the `Box Collider 2D` 'Scale' field.
+
+![An image showing the ground correctly done](Tutorial/Image/MakeSprites/1.webp)
+
+Once done, the ground should now tile correctly across the span of the collider.
+
+Feel free to also add sprites to any other ground tiles you have created.
+
+### 7.2. The Coin Sprites
+
+Similar to the ground, change the `Sprite` parameter of the Coin's `Sprite Renderer` to `coin_0`. Now the coin looks like a coin!
+
+However, unlike the Ground, the Coin is going to receive the blessing of being animated. To do this, an `Animator` will be used. Start by adding an `Animator` component to the `Coin` object.
+
+Next, enable the `Animation` window by going to the title bar of the window and selecting `Window` &rarr; `Animation` &rarr; `Animation`. Drag the new window / tab to somewhere comfortable, for this workshop it will be located here:
+
+![An image showing the animation window](Tutorial/Image/MakeSprites/2.webp)
+
+To begin making the Coin's animation, first ensure the Coin is selected in [the Hierarchy](#31-the-hierarchy) and then select the `Create` button found below the text 'To begin animating Coin, create an Animation Clip.'.
+
+In the popup that appears, select a location to store the animation, along with a name for the animation. For this workshop, the animation will be stored at `Assets` &rarr; `Animation` and will be called `CoinAnim`.
+
+**Note:** Ensure that the animation is stored within the Assets folder somewhere, so that it is with all of the other game assets.
+
+![An image showing a blank animation UI](Tutorial/Image/MakeSprites/3.webp)
+
+This is the animation timeline. The time codes at the top of the timeline start at 0:00 and end at 1:00 where 0:00 is 0 seconds and 1:00 is 1 second of animation. To start animating the coin, select `Preview` and then the red 'record' button to the right of the `Preview` button. Now any changes to the Coin object will be recorded as part of the animation.
+
+To start, select the `Sprite` field of the Coin's `Sprite Renderer` and change it to `coin_0`
+
+![An image showing the first frame being set](Tutorial/Image/MakeSprites/4.webp)
+
+Now just drag the timeline marker to the next time code and select the next coin sprite (`coin_1`). Then repeat that until all twelve sprites have been placed on the timeline as seen below:
+
+![The coin done](Tutorial/Image/MakeSprites/5.webp)
+
+With the Coin's sprites laid out, click the 'record' button again to stop recording changes, and feel free to click the 'Play' button to preview the animation.
+
+Now to make the Coin use the animation, navigate to the title bar of the window and select `Window` &rarr; `Animation` &rarr; `Animator`.
+
+![An image showing the animator window](Tutorial/Image/MakeSprites/6.webp)
+
+In the window that pops up, a graph view of the Coin's animator can be seen. This window shows all animations currently on the object, the only one here being `CoinAnim`, along with two conditions:
+
+- `Any State`: This state allows for other animations to point from it, meaning that if the conditions of those 'transitions' become true, the connected animation can be jumped to from any state,
+- `Entry`: This state is the starting state of the Animator, the orange line going from it to the `CoinAnim` state means that the Coin will automatically enter the `CoinAnim` animation when the scene starts.
+
+On the left of the winow there are two tabs `Layers` and `Parameters`. For the Coin neither of these are relevant, but the `Parameters` section may be interesting to look at as it allows for variables to be defined within the Animator that can be used to control transitions.
+
+**Extra:** Try right clicking on `Any State` and selecting `Make Transition` to make a transition between the two. Then select the created transition to see its properties in [the Inspector](#33-the-inspector). You can also select animations such as the orange `CoinAnim` to view their properties.
+
+**Congratulations!** You've finished the workshop! You've officially made a simple platformer that you can build on top of.
+
 ## 8. Suggested tasks
 
-- Try adding an enemy that hurts the player when touched,
-- Try adding moving platforms,
-- Try adding a double jump for the player,
-- Try making the camera follow the player.
+Below are a list of suggested activities to further what you've created in the workshop. Feel free to have a go at doing any of them!
+
+### 8.1 Prefabs!
+
+You've made some 'components' of a game; a Player and a Coin. Try dragging the Player object or Coin object to [the Project View](#35-project-view) and see what happens! Try dragging the prefab back into the scene and see what happens! Double click on the prefab from [the Project View](#35-project-view), make some changes and see what happens to the two copies of the prefab in the scene! 
+
+### 8.2. Player Animation
+
+With where the workshop left off, the Player is still just a white square. Using what you've learned from making the Ground and the Coin, attempt adding some animation to the Player, such as an Idle animation and Walking animation, that are swapped between when the Player starts and stops walking.
+
+### 8.3. More Sound Effects
+
+Currently only the Coin makes a sound effect when picked up. Have a go at adding extra sounds, such as when the Player jumps (Sound effects are under `Assets` &rarr; `Game Assets` &rarr; `music`).
+
+### 8.4. Score Display
+
+Currently, picking up a coin makes a sound effect, but doesn't really do anything. Have a go at creating a counter on-screen that increments when a Coin is picked up (Hint: A `UI (Canvas)` along with some supporting scripting can be used to achieve this).
+
+### 8.5. Camera Follows Player
+
+The camera is currently static and does not follow the Player as they move, limiting how large the level can be. Try making the camera follow the Player! (Hint: Think back to how the Player's floor detection was made to follow the Player.)
+
+### 8.6. An Enemy!
+
+From what you've learned with moving the Player around and animating the Coin, try adding a slime enemy that either hurts the Player or resets the scene when it collides with the Player.
+
+### 8.7. Power-ups
+
+Have a go at adding a power-up fruit that when touched, has an effect on the Player. One potential effect could be making the Player no longer take damage from the enemy made in [8.6.](#86-an-enemy).
+
+### 8.8. Win Condition
+
+Try adding a win condition (collecting all coins, defeating all enemies, etc), that resets the scene when achieved, or moves to an entirely new scene congratulating the Player on their victory.
