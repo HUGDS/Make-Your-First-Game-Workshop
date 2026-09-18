@@ -30,7 +30,11 @@ The below instructions will guide you through creating this platformer game, fee
 
     4.2. [Creating the Player's MonoBehaviour script](#42-creating-the-players-monobehaviour-script),
 
-    4.3. [A brief overview of the structure of a MonoBehaviour script](#43-a-brief-overview-of-the-structure-of-a-monobehaviour-script)
+    4.3. [A brief overview of the structure of a MonoBehaviour script](#43-a-brief-overview-of-the-structure-of-a-monobehaviour-script),
+
+    4.4. [Reading input from the Unity Input System](#44-reading-input-from-the-unity-input-system),
+
+    4.5. [Using the input to move the Player](#45-using-the-input-to-move-the-player),
 
 ## 1. Downloading the workshop
 
@@ -183,7 +187,7 @@ void Update()
 
 These two methods are provided by Unity, with the first one `Start` being called on the first frame of the scene being run, and `Update` being called on every subsequent frame.
 
-### 4.4. Creating the Player's script functionality
+### 4.4. Reading input from the Unity Input System
 
 Remember when you created the `Rigidbody 2D` and `Box Collider 2D` components on the Player object? Well now you need a way to interact with the `Rididbody 2D` from within the Player's script. To do this, create a variable of type `Rigidbody2D` as shown below and mark it with `[SerializeField]`:
 
@@ -213,7 +217,85 @@ private InputAction _jump;
 ...
 ```
 
+Unity's Input System works with 'Actions' and 'ActionMaps', where a named 'ActionMap' contains a set of named 'Actions', which abstract keyboard / controller / touch input to simple numerical inputs. As an example, the default 'Move' 'Action' within the 'Player' 'ActionMap' returns a 'Vector2' (An X/Y value) from either the left stick on a Gamepad, W,A,S,D, the stick on a Joystick or a 2D axis on an XR controller.
+
+```csharp
+void Start()
+{
+    // Fetch the input action map named "Player"
+    InputActionMap map = InputSystem.actions.FindActionMap("Player");
+
+    // Fetch the actions named "Move" and "Jump"
+    _move = map.FindAction("Move");
+    _jump = map.FindAction("Jump");
+}
+```
+
+To fetch a reference to these actions, the code above is used, where the `Player` 'ActionMap' is fetched and stored so that it can then be used to fetch the `Move` and `Jump` actions, which are then stored in the variables that were declared earlier.
+
+```csharp
+// Update is called once per frame
+void Update()
+{
+    // Poll Move and Jump actions
+    Vector2 moveAction = _move.ReadValue<Vector2>();
+    bool jumpAction = _jump.WasPressedThisFrame();
+}
+```
+
+To then read from these actions, the method `ReadValue` is used to return a value of the same type as the action. For the `Move` action this is a `Vector2` as it contains both X and Y components. For the jump action, you only want it to do a jump when the button is pressed rather than held though, and for this Unity provides a built-in method (`WasPressedThisFrame`) that returns either `true` or `false` for whether the button was pressed on this frame.
+
+**Extension:** If you are already quite familiar with C# programming, you may be familiar with the concept of events and observer based programming. Unity's Input System supports this programming paradigm by exposing the `performed` event on the type `InputAction` that is called when the action is performed. Have a go at replacing this per-frame polling with the less expensive event-based input for the `Jump` action.
+
+### 4.5. Using the input to move the Player
+
+```csharp
+// Update is called once per frame
+void Update()
+{
+    // Poll Move and Jump actions
+    Vector2 moveAction = _move.ReadValue<Vector2>();
+    bool jumpAction = _jump.WasPressedThisFrame();
+
+    // Do jump
+    if (jumpAction)
+    {
+        // Add force to rigidbody
+        _rigidBody.AddForceY(500);
+    }
+}
+```
+
+To then apply movement to the player is fairly simple. Firstly, the `Jump` action can be dealt with by checking if it was pressed this frame, and if it was, the `RigidBody2D` that we stored a reference too earlier can be used to apply an upwards force to the Player via the `AddForceY` method.
+
+```csharp
+// Update is called once per frame
+void Update()
+{
+    ...
+    // ^ Jump action handling and action polling
+
+    // Do movement
+    gameObject.transform.position = new Vector3
+        (
+            gameObject.transform.position.x + 10 * moveAction.x * Time.deltaTime,
+            gameObject.transform.position.y,
+            gameObject.transform.position.z
+        );
+}
+```
+
+The same force-based approach could be taken for the Player's movement, however in a platformer game, generally players like to have snappy control over their character's movement, and to do this the `Transform` component of the Player can be directly accessed to modify its position.
+
+In the above code, all that is happening is that the Y and Z co-ordinates of the position are being kept the same, whilst the movement action's left-right value is being used to add or subtract from the Player's X position, to move them left and right.
+
+The `Time.deltaTime` component is a built-in Unity value that returns a value, which if you were to poll every `Update` for a second, would sum to 1. Multiplying by this means that regardless of the framerate that the game is running at, the Player's movement should not become faster or slower.
+
+**Extension:** Have a go at replacing this snappy movement with force-based left-right movement.
+
 ## Creating something for the Player to stand on
+
+If you've been returning to the Unity Editor to run and test your code as you've been working through the prior section, you may have realized that the Player tends to fall into the abyss below the bottom of the screen. In this part of the workshop, ground to stand on will be added.
 
 ## Creating an Enemy
 
