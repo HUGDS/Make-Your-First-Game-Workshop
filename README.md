@@ -411,8 +411,73 @@ The `&&` means 'and', so both conditions must be true for a jump to be allowed t
 
 Returning to the Unity editor once more, make sure to drag the `FloorCheck` object onto the new field on the `Player_Move` script. Then click [the Play button](#32-play--pause) to test the floor detection.
 
-## Creating a coin
+## 6. Creating a Coin
 
-## Replacing those boxes with sprites
+As stated prior, all good things in Unity start with a box. So to make a coin, create another square, and to help it stand out, shrink it a little bit.
 
-## Suggested tasks
+![An image showing a small box representing a coin](Tutorial/Image/Coin/0.webp)
+
+As with every other object, add a `Box Collider 2D` component to the Coin. Tick the `Is Trigger` field of the `Box Collider 2D`. This field makes the coin not prevent Player movement when the Player collides with the Coin.
+
+![An image showing the state of the coin object](Tutorial/Image/Coin/1.webp)
+
+Add an `Audio Source` component to the Coin as well. This will enable the Coin to play back a 'pickup' sound when picked up. In the `Audio Generator` field click on the '+' and select `coin`. Then disable the `Play On Awake` field.
+
+![An image showing the configured audio source](Tutorial/Image/Coin/2.webp)
+
+Next, create another MonoBehaviour script. Name it something appropriate such as `Coin_Pickup`. Then paste the below code into the script:
+
+```csharp
+using UnityEngine;
+
+public class Coin_Pickup : MonoBehaviour
+{
+    // Editor Variables
+    [SerializeField]
+    private SpriteRenderer _renderer;
+    [SerializeField]
+    private AudioSource _playback;
+
+    // Private Variables
+    private bool _collected = false;
+
+    // Called when something collides with the coin
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Ensure that the coin cannot be collected multiple times
+        if (_collected) return;
+
+        // Tell audio source to play sound
+        _playback.Play();
+
+        // Hide the coin
+        _renderer.color = Color.clear;
+
+        // Set the coin to be collected
+        _collected = true;
+    }
+}
+```
+
+Take some time to read over the code and see if you can understand what the code is doing.
+
+Similar to the ground, this script uses trigger collisions to detect when something collides with the Coin, and then make the coin transparent along with telling the Audio Source to begin playing the coin pickup sound effect.
+
+If you are still unsure as to how any specific part of this code works, you are welcome to ask one of the execs at the workshop to help you with understanding the code.
+
+![An image showing a completed coin](Tutorial/Image/Coin/3.webp)
+
+Back to Unity, add the new MonoBehaviour script to the Coin object and pass references to the `Sprite Renderer` and `Audio Source` components of the Coin to the script.
+
+Now you should be able to click [the Play button](#32-play--pause) to test the Coin functionality.
+
+**Extension:** Currently the Coin will become collected upon colliding with anything. Can you use Unity's object tag system along with the `collision` object used within the `OnTriggerEnter2D` method to make sure that the Coin only becomes collected when the Player collides with the Coin.
+
+## 7. Replacing those boxes with sprites
+
+## 8. Suggested tasks
+
+- Try adding an enemy that hurts the player when touched,
+- Try adding moving platforms,
+- Try adding a double jump for the player,
+- Try making the camera follow the player.
