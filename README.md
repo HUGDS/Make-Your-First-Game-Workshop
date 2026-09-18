@@ -34,7 +34,7 @@ The below instructions will guide you through creating this platformer game, fee
 
     4.4. [Reading input from the Unity Input System](#44-reading-input-from-the-unity-input-system),
 
-    4.5. [Using the input to move the Player](#45-using-the-input-to-move-the-player),
+    4.5. [Using input to move the Player](#45-using-the-input-to-move-the-player),
 
 ## 1. Downloading the workshop
 
@@ -247,7 +247,7 @@ To then read from these actions, the method `ReadValue` is used to return a valu
 
 **Extension:** If you are already quite familiar with C# programming, you may be familiar with the concept of events and observer based programming. Unity's Input System supports this programming paradigm by exposing the `performed` event on the type `InputAction` that is called when the action is performed. Have a go at replacing this per-frame polling with the less expensive event-based input for the `Jump` action.
 
-### 4.5. Using the input to move the Player
+### 4.5. Using input to move the Player
 
 ```csharp
 // Update is called once per frame
