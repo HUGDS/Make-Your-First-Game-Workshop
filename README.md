@@ -36,7 +36,7 @@ If at any point you wish to view a completed version of this workshop to referen
 
     4.4. [Reading input from the Unity Input System](#44-reading-input-from-the-unity-input-system),
 
-    4.5. [Using input to move the Player](#45-using-the-input-to-move-the-player),
+    4.5. [Using input to move the Player](#45-using-input-to-move-the-player),
 
 5. [Creating something for the Player to stand on](#5-creating-something-for-the-player-to-stand-on),
 
