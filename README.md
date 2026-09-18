@@ -36,6 +36,12 @@ The below instructions will guide you through creating this platformer game, fee
 
     4.5. [Using input to move the Player](#45-using-the-input-to-move-the-player),
 
+5. [Creating something for the Player to stand on](#5-creating-something-for-the-player-to-stand-on),
+
+    5.1. [Making some ground](#51-making-some-ground),
+
+    5.2. [Extension: Preventing double jumping](#52-extension-preventing-double-jumping),
+
 ## 1. Downloading the workshop
 
 To download the project from this GitHub page, first select `Code`, and then `Download ZIP`, as shown below.
@@ -293,11 +299,119 @@ The `Time.deltaTime` component is a built-in Unity value that returns a value, w
 
 **Extension:** Have a go at replacing this snappy movement with force-based left-right movement.
 
-## Creating something for the Player to stand on
+## 5. Creating something for the Player to stand on
+
+### 5.1. Making some ground
+
+![An image showing the lack of ground](Tutorial/Image/Ground/0.webp)
 
 If you've been returning to the Unity Editor to run and test your code as you've been working through the prior section, you may have realized that the Player tends to fall into the abyss below the bottom of the screen. In this part of the workshop, ground to stand on will be added.
 
-## Creating an Enemy
+Similar to creating the player, the ground can be made out of squares. To do this, simply follow the same process as was done for creating the Player object, then drag and scale the square to where you want the ground to be. In the example shown below the square has been placed at (0.06, -4.06) and has been scaled to (20, 1).
+
+![An image showing some ground](Tutorial/Image/Ground/1.webp)
+
+Don't forget to also give the ground a box collider, so that the Player can collide with it!
+
+From this point feel free to tweak the Player's jump height and add more boxes to create platforms. For the rest of this workshop, the ground will look like this:
+
+### 5.2. Extension: Preventing double jumping
+
+You may have noticed that the Player can jump whenever they want, regardless of whether they are on the ground or not. To work around this, the ever-useful Box Collider 2D can be used to add ground detection. To do this, we can add a child to the Player object by selecting the Player and then right clicking on them in [the Hierarchy](#31-the-hierarchy) and selecting `Create Empty`. Name the object something appropriate such as `FloorCheck`.
+
+![An image showing FloorCheck being moved](Tutorial/Image/Ground/2.webp)
+
+With the new object selected, navigate to [the Scene View](#34-scene-view) and drag the green arrow such that the object appears slightly below the player. Next we'll add a `Box Collider 2D` to the object.
+
+![An image showing the Box Collider set up](Tutorial/Image/Ground/3.webp)
+![An image showing the object ready](Tutorial/Image/Ground/4.webp)
+
+Enable the `Is Trigger` field of the Box Collider and then move and scale it such that the collider is slightly below the bottom of the Player object and spans the width of the Player.
+
+Next make a new MonoBehaviour script and name it something appropriate such as `Player_FloorCheck`. This script will use the built in methods provided from the Box Collider to detect when this object is colliding with something.
+
+```csharp
+using UnityEngine;
+
+public class Player_FloorCheck : MonoBehaviour
+{
+    // Private Variables
+    private bool _floored = false;
+    private int _collisionCount = 0;
+
+    // Called when something collides with this object
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Add one to the number of current collisions
+        _collisionCount++;
+
+        // Check if we are now on the floor
+        AmFloored();
+    }
+    // Called when something stops colliding with this object
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // Subtract one to the number of current collisions
+        _collisionCount--;
+
+        // Check if we are still on the floor
+        AmFloored();
+    }
+
+    // Figures out whether we are standing on anything
+    private void AmFloored()
+    {
+        // Are there any things colliding with this object?
+        if (_collisionCount > 0)
+        {
+            // Then we must be floored
+            _floored = true;
+        }
+        // Otherwise
+        else
+        {
+            // We cannot be on the floor anymore
+            _floored = false;
+        }
+    }
+
+    // Fields
+    public bool Floored { get { return _floored; } }
+}
+```
+
+Paste the above code into the newly created script. Take some time to read over the comments to figure out what the code is doing. If you are unsure about what the code is doing at any point, feel free to reach out to one of the society execs at the workshop, who will be happy to help you with understanding what the code is doing.
+
+Once you feel comfortable that you know what the code is doing, return to Unity and add this newly created script to the object in the same way as the Player's movement script was added.
+
+```csharp
+...
+private Rigidbody2D _rigidBody;
+[SerializeField]
+private Player_FloorCheck _floorCheck;
+
+// Private Variables
+...
+```
+
+Next, return to the Player's movement script in Visual Studio and add an extra field for this newly created script in the same way that the Rigid body was added prior.
+
+Using this, the code to check for jumping can now be changed to read as:
+
+```csharp
+// Do jump
+if (jumpAction && _floorCheck.Floored)
+{
+    // Add force to rigidbody
+    _rigidBody.AddForceY(500);
+}
+```
+
+The `&&` mean 'and', so both conditions must be true for a jump to be allowed to happen, and the `.Floored` is the field that was created in the other script.
+
+Returning to the Unity editor once more, make sure to drag the `FloorCheck` object onto the new field on the `Player_Move` script. Then click [the Play button](#32-play--pause) to test the floor detection.
+
+## Creating a coin
 
 ## Replacing those boxes with sprites
 
