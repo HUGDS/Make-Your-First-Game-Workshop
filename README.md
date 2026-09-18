@@ -407,7 +407,7 @@ if (jumpAction && _floorCheck.Floored)
 }
 ```
 
-The `&&` mean 'and', so both conditions must be true for a jump to be allowed to happen, and the `.Floored` is the field that was created in the other script.
+The `&&` means 'and', so both conditions must be true for a jump to be allowed to happen, and the `.Floored` is the field that was created in the other script.
 
 Returning to the Unity editor once more, make sure to drag the `FloorCheck` object onto the new field on the `Player_Move` script. Then click [the Play button](#32-play--pause) to test the floor detection.
 
